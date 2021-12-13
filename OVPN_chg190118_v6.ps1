@@ -31,11 +31,10 @@ function OVPN_chg190118_v6 {
                 Start-Sleep -s 1
             }
         } else {
+            $job = Start-Job { ((Get-NetConnectionProfile).InterfaceAlias | ForEach-Object{ Disable-NetAdapterBinding -ComponentID:ms_tcpip6 -Name:$_ }) }
+            Wait-Job $job | Out-Null; Receive-Job $job
             if (!(__Openvpn_Status__)){
-                $job = Start-Job { ((Get-NetConnectionProfile).InterfaceAlias | ForEach-Object{ Disable-NetAdapterBinding -ComponentID:ms_tcpip6 -Name:$_ }) }
-                Wait-Job $job | Out-Null; Receive-Job $job
                 .$ovpn --connect $ovpnSetting
-                
                 while (!(__Openvpn_Status__)) {
                     Write-Host "openVPN connecting..."
                     Start-Sleep -s 1
