@@ -1,0 +1,1 @@
+pwsh -Command "& {. '%~dp0vpnsw.ps1'}"
