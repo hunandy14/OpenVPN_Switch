@@ -25,7 +25,7 @@ function OVPN_chg190118_v6 {
         
         if ($Disconnect) {
             .$ovpn --command disconnect $ovpnSetting
-            Get-NetAdapterBinding -ComponentID:ms_tcpip6| Out-Null | Where-Object{!$_.Enabled} | ForEach-Object{Enable-NetAdapterBinding -Name:$_.Name -ComponentID:ms_tcpip6;$_}
+            Get-NetAdapterBinding -ComponentID:ms_tcpip6 | Where-Object{!($_.Enabled)} | ForEach-Object{Enable-NetAdapterBinding -Name:$_.Name -ComponentID:ms_tcpip6}
             while (__Openvpn_Status__) {
                 Write-Host "openVPN DisConnecting..."
                 Start-Sleep -s 1
