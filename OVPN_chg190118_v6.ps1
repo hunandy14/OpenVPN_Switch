@@ -1,13 +1,14 @@
 [CmdletBinding()]
 param (
     [switch] $Disconnect,
-    [switch] $Switch,
+    [switch] $Connect,
     [switch] $Info,
     [switch] $Load
 )
 function __Openvpn_NetAdapter__ {
     return (Get-NetAdapter -InterfaceDescription "TAP-Windows Adapter V9")
-}function __Openvpn_Status__ {
+}
+function __Openvpn_Status__ {
     return ($(__Openvpn_NetAdapter__).Status -eq "Up")
 }
 function OVPN_chg190118_v6 {
@@ -45,27 +46,21 @@ function OVPN_chg190118_v6 {
     $(__Openvpn_NetAdapter__) | Select-Object Name, InterfaceDescription, Status
 }
 
-function OVPN_chg190118_v6_Disconnect {
-    OVPN_chg190118_v6 -Disconnect
-}
 function OVPN_chg190118_v6_Switch {
-    if (__Openvpn_Status__) {
-        OVPN_chg190118_v6 -Disconnect
-    } else {
-        OVPN_chg190118_v6
-    }
+    if (__Openvpn_Status__) { OVPN_chg190118_v6 -Disconnect } 
+    else { OVPN_chg190118_v6 }
 }
 
 function __main__ {
     if ($Load) {
         return
-    } elseif ($Switch) {
-        OVPN_chg190118_v6_Switch
+    } elseif ($Connect) {
+        OVPN_chg190118_v6
     } elseif ($Disconnect) {
-        OVPN_chg190118_v6_Disconnect
+        OVPN_chg190118_v6 -Disconnect
     } elseif ($Info) {
         OVPN_chg190118_v6 -Info:$Info
     } else {
-        OVPN_chg190118_v6
+        OVPN_chg190118_v6_Switch
     }
 } __main__
